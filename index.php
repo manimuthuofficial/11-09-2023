@@ -114,7 +114,7 @@
 
 <!-- Danger Header Modal -->
 <div id="danger-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header text-bg-danger border-0">
 				<h4 class="modal-title" id="danger-header-modalLabel"><i class="uil uil-comment-info-alt"></i> Error!</h4>
@@ -201,10 +201,16 @@
                 $('#danger-header-modal').modal('show');
                 return;
             }
+			if (!(password.length >= 5 && password.length <= 10))
+			{
+				$('#validationErrors').html('* Password must be between 5 and 10 characters.');
+                $('#danger-header-modal').modal('show');
+                return;
+			}
             
             // If validation passes, send data to server using AJAX
             $.ajax({
-                url: '<?php echo base_url('UserController/insertUser'); ?>',
+                url: '<?php echo base_url('authInsert'); ?>',
                 type: 'POST',
                 data: $(this).serialize(),
                 success: function(response) {
@@ -221,27 +227,6 @@
         });
     });
 </script>
-
-
-$.ajax({
-                    url: "<?php echo site_url('UserController/insertUser'); ?>",
-                    type: "POST",
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    success: function(data) {
-                        if (data.status === "success") {
-                            $("#alertMessage").text("User added successfully!");
-                        } else {
-                            $("#alertMessage").text("Failed to insert user data.");
-                        }
-                        $("#alertModal").modal("show");
-                    },
-                    error: function() {
-                        $("#alertMessage").text("An error occurred.");
-                        $("#alertModal").modal("show");
-                    }
-                });
-
 
 
 
@@ -261,5 +246,4 @@ $.ajax({
 </body>
 
 </html>
-
 
