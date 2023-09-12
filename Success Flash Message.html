@@ -1,0 +1,59 @@
+Success Flash Message :
+
+
+app/Views/users.php [ user insert form ] :
+
+<form method="post" action="<?= base_url('/users/insert') ?>"> <!-- Adjust the action URL -->
+	<div class="mb-3">
+		<label for="exampleInputEmail1" class="form-label">User Name</label>
+		<input type="text" class="form-control" name="username" id="username">
+	</div>
+	<div class="mb-3">
+		<label for="exampleInputEmail1" class="form-label">Email </label>
+		<input type="email" class="form-control" name="email" id="email">
+	</div>
+	<div class="mb-3">
+		<label for="exampleInputPassword1" class="form-label">Password</label>
+		<input type="password" class="form-control" name="password" id="password">
+	</div>
+	
+	<button type="submit" class="btn btn-secondary">Submit</button>
+</form>
+
+<!-- Success Flash Message -->
+<?php
+	$session = session();
+	if ($session->has('success')) 
+	{
+		echo '<p class="alert alert-success">' . $session->getFlashdata('success') . '</p>';
+	}
+?>
+
+app/Controllers/UsersController.php :
+
+public function insert()
+{
+	$UsersModel = new UsersModel();
+	
+	// Prepare user data
+	$data = [
+		'username' => $this->request->getPost('username'),
+		'email' => $this->request->getPost('email'),
+		'password' => $this->request->getPost('password'),
+	];
+
+	// Insert the user data into the database
+	$UsersModel->insert($data);
+
+	
+	// Redirect or display a success message
+	//return redirect()->to('/user/success'); 
+
+	// Set a success flash message
+	$session = session();
+	$session->setFlashdata('success', 'User data has been successfully inserted.');
+
+	// Redirect back to the form or any other appropriate page
+	return redirect()->to('/users');
+   
+}
